@@ -1,9 +1,9 @@
+// src/components/EmployeeCard.tsx
 import type { Employee } from "../types";
-import { useState } from "react";
-
 interface EmployeeCardProps {
   employee: Employee;
   onSelect?: (employee: Employee) => void;
+  onToggleStatus?: (employee: Employee) => void;
 }
 const statusConfig = {
   active: { bg: "bg-green-100", text: "text-green-800", label: "Activo" },
@@ -14,30 +14,27 @@ const statusConfig = {
     label: "En permiso",
   },
 };
-function EmployeeCard({ employee, onSelect }: EmployeeCardProps) {
-  const [hovered, setHovered] = useState(false);
+function EmployeeCard({
+  employee,
+  onSelect,
+  onToggleStatus,
+}: EmployeeCardProps) {
   const { name, position, department, status, avatarUrl } = employee;
   const statusStyle = statusConfig[status];
   return (
     <div
       onClick={() => onSelect?.(employee)}
-      onMouseEnter={() => setHovered(true)}   
-      onMouseLeave={() => setHovered(false)}
       className={`
 bg-white rounded-xl border border-slate-200 p-5 w-full
 hover:shadow-md hover:border-blue-300
 transition-all duration-200
 ${onSelect ? "cursor-pointer" : ""}
 `}
-style={{
-  transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-}}
     >
       <div className="flex items-center gap-3">
         <div
-          className="w-12 h-12 rounded-full bg-blue-100 flex items-center
-justify-center overflow-hidden text-blue-700
-font-semibold text-lg flex-shrink-0"
+          className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden text-blue-700 font-semibold
+text-lg flex-shrink-0"
         >
           {avatarUrl ? (
             <img
@@ -55,15 +52,18 @@ font-semibold text-lg flex-shrink-0"
         </div>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2">
-        <span
-          className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1
-rounded-full font-medium truncate"
-        >
+        <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium truncate">
           {department}
         </span>
         <span
-          className={`text-xs px-2.5 py-1 rounded-full font-medium
-${statusStyle.bg} ${statusStyle.text}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleStatus?.(employee);
+          }}
+          title={onToggleStatus ? "Clic para cambiar el estado" : undefined}
+          className={`text-xs px-2.5 py-1 rounded-full font-medium ${statusStyle.bg} ${statusStyle.text} ${
+            onToggleStatus ? "cursor-pointer hover:opacity-75" : ""
+          }`}
         >
           {statusStyle.label}
         </span>
