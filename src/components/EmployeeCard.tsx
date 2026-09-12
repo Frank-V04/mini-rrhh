@@ -1,4 +1,5 @@
 // src/components/EmployeeCard.tsx
+import { useNavigate } from "react-router-dom";
 import type { Employee } from "../types";
 interface EmployeeCardProps {
   employee: Employee;
@@ -19,11 +20,12 @@ function EmployeeCard({
   onSelect,
   onToggleStatus,
 }: EmployeeCardProps) {
+  const navigate = useNavigate();
   const { name, position, department, status, avatarUrl } = employee;
   const statusStyle = statusConfig[status];
   return (
     <div
-      onClick={() => onSelect?.(employee)}
+    onClick={() => navigate(`/empleados/${employee.id}`)}
       className={`
 bg-white rounded-xl border border-slate-200 p-5 w-full
 hover:shadow-md hover:border-blue-300
