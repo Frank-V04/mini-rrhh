@@ -33,7 +33,7 @@ function EmployeesPage() {
 
   // Estado del servidor: la lista de empleados, filtrada. TanStack Query se encarga
   // de pedirla, cachearla y mantenerla sincronizada, sin useEffect ni useState.
-  const { data, isLoading: loading, isError, error: queryError } = useEmployees({
+  const { data, isLoading: loading, isError, error: queryError, refetch } = useEmployees({
     search: search || undefined,
     department: selectedDepartment || undefined,
     status: selectedStatus || undefined,
@@ -195,13 +195,20 @@ function EmployeesPage() {
         </div>
       )}
 
-      {/* Estado de error */}
+            {/* Estado de error */}
       {isError && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-red-700 font-medium">Error al cargar los empleados</p>
-          <p className="text-red-500 text-sm mt-1">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-md mx-auto">
+          <span className="text-4xl block mb-3">⚠️</span>
+          <p className="text-red-700 font-semibold text-lg mb-1">Error al cargar los empleados</p>
+          <p className="text-red-500 text-sm mb-5">
             {(queryError as Error)?.message || 'Error desconocido'}
           </p>
+          <button
+            onClick={() => refetch()}
+            className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            Reintentar
+          </button>
         </div>
       )}
 
