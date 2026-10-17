@@ -1,5 +1,5 @@
 // src/hooks/useEmployees.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { handleError } from '../utils/errorHandler';
 import { employeeService, type EmployeeFilters } from '../services/employeeService';
@@ -17,9 +17,9 @@ export function useEmployees(filters: EmployeeFilters = {}) {
   return useQuery({
     queryKey: employeeKeys.list(filters),
     queryFn: () => employeeService.getAll(filters),
+    placeholderData: keepPreviousData,
   });
 }
-
 // Hook para obtener un empleado por ID
 export function useEmployee(id: number | null) {
   return useQuery({
